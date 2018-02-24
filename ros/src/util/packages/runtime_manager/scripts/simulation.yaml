@@ -22,7 +22,7 @@ buttons:
         flags  : [ left, no_category ]
 
   gazebo :
-    run : sh -c "$(rospack find runtime_manager)/scripts/gazebo.sh"
+    run : do_shell_exec sh "$(rospack find runtime_manager)/scripts/gazebo.sh"
     param : gazebo_world_map
     gui :
       flags : [ kill_children ]
@@ -84,5 +84,4 @@ params :
       kind      : menu
       choices   : [ CarDemo, CatVechicle, TestMap1 ]
       choices_type : str
-      v         : CarDemo
       cmd_param : { delim: '' }
