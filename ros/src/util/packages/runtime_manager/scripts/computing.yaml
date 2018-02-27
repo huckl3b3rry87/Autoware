@@ -533,6 +533,13 @@ subs :
         gui  :
           use_crosswalk_detection : { border : 4, flags : [ all ] }
           enable_multiple_crosswalk_detection : { border : 4, flags : [ all ] }
+    - name : NLOpt_planner
+      desc : NLOpt_planner desc sample
+      subs :
+      - name : obstacle_avoid
+        desc : obstacle_avoid desc sample
+        cmd  : roslaunch nloptcontrol_planner demo.launch
+        param: obstacle_avoid
     - name : lattice_planner
       desc : lattice_planner desc sample
       subs :
