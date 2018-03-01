@@ -1874,14 +1874,6 @@
                                                     </events>
                                                 </object>
                                             </object>
-                                            <object class="sizeritem">
-                                                <flag>wxALIGN_CENTER_VERTICAL</flag>
-                                                <border>0</border>
-                                                <option>1</option>
-                                                <object class="wxPanel" name="panel_gazebo_world" base="EditPanel">
-                                                    <style>wxTAB_TRAVERSAL</style>
-                                                </object>
-                                            </object>
                                         </object>
                                     </object>
                                     <object class="sizeritem">
