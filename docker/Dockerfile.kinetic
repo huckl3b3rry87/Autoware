@@ -14,29 +14,37 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     dirmngr \
     gnupg2 \
     && rm -rf /var/lib/apt/lists/*
+
 # setup keys
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 421C365BD9FF1F717815A3895523BAEEB01FA116
+
 # setup sources.list
 RUN echo "deb http://packages.ros.org/ros/ubuntu xenial main" > /etc/apt/sources.list.d/ros-latest.list
+
 # install bootstrap tools
 RUN apt-get update && apt-get install --no-install-recommends -y \
     python-rosdep \
     python-rosinstall \
     python-vcstools \
     && rm -rf /var/lib/apt/lists/*
+
 # setup environment
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
+
 # bootstrap rosdep
 RUN rosdep init \
     && rosdep update
+
 # install ros packages
 ENV ROS_DISTRO kinetic
 RUN apt-get update && apt-get install -y \
     ros-kinetic-ros-core=1.3.1-0* \
     && rm -rf /var/lib/apt/lists/*
+
 # setup entrypoint
 COPY ./ros_entrypoint.sh /
+
 #ENTRYPOINT ["/ros_entrypoint.sh"]  # H.F. comment out
 #CMD ["bash"]                       # H.F. comment out
 ################################################################################  END
@@ -49,6 +57,7 @@ COPY ./ros_entrypoint.sh /
 # This is an auto generated Dockerfile for ros:ros-base
 # generated from docker_images/create_ros_image.Dockerfile.em
 # FROM ros:kinetic-ros-core-xenial  # H.F. comment out
+
 # install ros packages
 RUN apt-get update && apt-get install -y \
     ros-kinetic-ros-base=1.3.1-0* \
@@ -63,6 +72,7 @@ RUN apt-get update && apt-get install -y \
 # This is an auto generated Dockerfile for ros:robot
 # generated from docker_images/create_ros_image.Dockerfile.em
 # FROM ros:kinetic-ros-base-xenial  # H.F. comment out
+
 # install ros packages
 RUN apt-get update && apt-get install -y \
     ros-kinetic-robot=1.3.1-0* \
@@ -77,6 +87,7 @@ RUN apt-get update && apt-get install -y \
 # This is an auto generated Dockerfile for ros:desktop
 # generated from docker_images/create_ros_image.Dockerfile.em
 # FROM ros:kinetic-robot-xenial   # H.F. comment out
+
 # install ros packages
 RUN apt-get update && apt-get install -y \
     ros-kinetic-desktop=1.3.1-0* \
@@ -89,9 +100,11 @@ RUN apt-get update && apt-get install -y \
 #https://github.com/osrf/car_demo/blob/master/Dockerfile
 ##############################################################
 # FROM osrf/ros:kinetic-desktop     # H.F. comment out
+
 #LABEL com.nvidia.volumes.needed="nvidia_driver"  # H.F. comment out
 #ENV PATH /usr/local/nvidia/bin:${PATH}  # H.F. comment out
 #ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}  # H.F. comment out
+
 RUN apt-get update \
  && apt-get install -y \
     wget \
@@ -99,6 +112,8 @@ RUN apt-get update \
     sudo \
     mesa-utils \
  && apt-get clean
+
+
 # Get gazebo binaries
 RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list \
  && wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add - \
@@ -109,23 +124,31 @@ RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` 
     ros-kinetic-fake-localization \
     ros-kinetic-joy \
  && apt-get clean
+
+
 #RUN mkdir -p /tmp/workspace/src                                         # H.F. comment out
 #COPY car_demo/prius_description /tmp/workspace/src/prius_description    # H.F. comment out
 #COPY car_demo/prius_msgs /tmp/workspace/src/prius_msgs                   # H.F. comment out
 #COPY car_demo/car_demo /tmp/workspace/src/car_demo                        # H.F. comment out
+
+
 # RUN /bin/bash -c 'cd /tmp/workspace \       # H.F. comment out
 # && source /opt/ros/kinetic/setup.bash \     # H.F. comment out
 # && catkin_make'                             # H.F. comment out
+
 # CMD ["/bin/bash", "-c", "source /opt/ros/kinetic/setup.bash && source /tmp/workspace/devel/setup.bash && roslaunch car_demo demo.launch"] # H.F. comment out
 ############################################################  END
 #https://github.com/osrf/car_demo/blob/master/Dockerfile
 ##############################################################
 #%%%%%%%%%%
+
 # H.F.: Install some missing dependencies
 RUN sudo apt-get update && sudo apt-get install -y openni2-doc openni2-utils openni-doc openni-utils
 RUN sudo apt-get install -y libopenni0 libopenni-sensor-pointclouds0 libopenni2-0 libopenni-sensor-pointclouds-dev
 RUN sudo apt-get install -y libopenni2-dev libopenni-dev rand
+
 # libopencv-3.2.0-dev  https://github.com/BVLC/caffe/wiki/OpenCV-3.2-Installation-Guide-on-Ubuntu-16.04
+
 ############################################################  START
 # https://github.com/CPFL/Autoware/blob/master/docker/generic/Dockerfile.kinetic
 ##############################################################
@@ -150,10 +173,12 @@ RUN apt-get install -y \
         libasound2 libgtk2.0-0 libdbus-glib-1-2 libxt6 libexif12 \
         libgl1-mesa-glx libgl1-mesa-dri language-pack-en \
         && update-locale LANG=en_US.UTF-8 LC_MESSAGES=POSIX
+
 # Install some basic GUI tools
 RUN apt-get install -y \
         cmake-qt-gui \
         gnome-terminal
+
 # Install ROS packages
 # H.F. :
 # removed: ros-kinetic-desktop-full
@@ -169,6 +194,7 @@ RUN apt-get update && apt-get install -y \
         ros-kinetic-gazebo8-ros-control ros-kinetic-joystick-drivers \
         libnlopt-dev freeglut3-dev qtbase5-dev libqt5opengl5-dev libssh2-1-dev \
         libarmadillo-dev libpcap-dev gksu libgl1-mesa-dev libglew-dev python-wxgtk3.0
+
 # Add basic user
 # Replace 1000 with your user/group id
 # H.F. moved comments to remove [WARNING]: Empty continuation line found in: ...
@@ -188,25 +214,31 @@ RUN useradd -m $USERNAME && \
 RUN echo "source /opt/ros/kinetic/setup.bash" >> /home/$USERNAME/.bashrc && \
         echo "export QT_X11_NO_MITSHM=1" >> /home/$USERNAME/.bashrc && \
         echo "cd" >> /home/$USERNAME/.bashrc
+
 RUN echo rand -N 1 # H.F. make sure we do not use the cache file
 # Change user
 USER autoware
+
 # H.F. :
 # added: sudo rm -rf /etc/ros/rosdep/sources.list.d/*
 RUN sudo rm -rf /etc/ros/rosdep/sources.list.d/* \
         && sudo rosdep init \
         && rosdep update \
         && echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+
 # Install Autoware
-# T.Q.
-RUN echo 3
-RUN git clone https://github.com/huckl3b3rry87/Autoware.git -b feature/trajectory_generator /home/$USERNAME/Autoware
+RUN rand -N 1 # in case source was modified make sure it gets the latest code.  H.F.
+RUN git clone https://github.com/huckl3b3rry87/Autoware.git /home/$USERNAME/Autoware
+# RUN git clone https://github.com/huckl3b3rry87/Autoware.git -b feature/port_car_demo /home/$USERNAME/Autoware
 RUN /bin/bash -c 'source /opt/ros/kinetic/setup.bash \
 && cd /home/$USERNAME/Autoware/ros/src \
-&& catkin_init_workspace; cd .. \
+&& catkin_init_workspace; cd ../ \
+&& catkin_make --pkg prius_msgs \
 && catkin_make'
+
 # catkin_make --pkg prius_msgs && catkin_make  added H.F.
 # ./catkin_make_release commented out H.F.
+
 RUN echo "source /home/$USERNAME/Autoware/ros/devel/setup.bash" >> /home/$USERNAME/.bashrc
 # Setting
 ENV LANG="en_US.UTF-8"
