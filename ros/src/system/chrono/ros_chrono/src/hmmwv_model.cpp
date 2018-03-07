@@ -53,7 +53,7 @@ using namespace chrono::vehicle::hmmwv;
 // Problem parameters
 // Main Data Path
 //std::string data_path("/home/shreyas/.julia/v0.6/MAVs/catkin_ws/data/vehicle/");
-std::string data_path("data/vehicle/");
+std::string data_path("../../../src/system/chrono/ros_chrono/src/data/vehicle/");
 // Contact method type
 ChMaterialSurface::ContactMethod contact_method = ChMaterialSurface::SMC;
 
@@ -208,7 +208,55 @@ class ChDriverSelector : public irr::IEventReceiver {
 
 void controlCallback(const traj_gen::Control::ConstPtr &msg,HMMWV_Reduced &my_hmmwv, ChVehicleIrrApp &app,ChIrrGuiDriver &driver_gui)
 {
+  std::cout << "Callback Activated!!!";
+/*  HMMWV_Reduced my_hmmwv;
+  my_hmmwv.SetContactMethod(contact_method);
+  my_hmmwv.SetChassisFixed(false);
+  my_hmmwv.SetInitPosition(ChCoordsys<>(initLoc, initRot));
+  my_hmmwv.SetPowertrainType(powertrain_model);
+  my_hmmwv.SetDriveType(drive_type);
+  my_hmmwv.SetTireType(tire_model);
+  my_hmmwv.SetTireStepSize(tire_step_size);
+  my_hmmwv.SetPacejkaParamfile(pacejka_tire_file);
+  my_hmmwv.Initialize();
 
+  my_hmmwv.SetChassisVisualizationType(chassis_vis_type);
+  my_hmmwv.SetSuspensionVisualizationType(suspension_vis_type);
+  my_hmmwv.SetSteeringVisualizationType(steering_vis_type);
+  my_hmmwv.SetWheelVisualizationType(wheel_vis_type);
+  my_hmmwv.SetTireVisualizationType(tire_vis_type);
+
+  ChVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Steering Controller Demo",
+  irr::core::dimension2d<irr::u32>(800, 640));
+  //PAUSE SIMULATION
+  app.SetPaused(1);
+
+  app.SetHUDLocation(500, 20);
+  app.SetSkyBox();
+  app.AddTypicalLogo();
+  app.AddTypicalLights(irr::core::vector3df(-150.f, -150.f, 200.f), irr::core::vector3df(-150.f, 150.f, 200.f), 100,
+                                           100);
+  app.AddTypicalLights(irr::core::vector3df(150.f, -150.f, 200.f), irr::core::vector3df(150.0f, 150.f, 200.f), 100,
+                                           100);
+  app.EnableGrid(false);
+  app.SetChaseCamera(trackPoint, 6.0, 0.5);
+
+  app.SetTimestep(step_size);
+
+  // Visualization of controller points (sentinel & target)
+  irr::scene::IMeshSceneNode* ballS = app.GetSceneManager()->addSphereSceneNode(0.1f);
+  irr::scene::IMeshSceneNode* ballT = app.GetSceneManager()->addSphereSceneNode(0.1f);
+  ballS->getMaterial(0).EmissiveColor = irr::video::SColor(0, 255, 0, 0);
+  ballT->getMaterial(0).EmissiveColor = irr::video::SColor(0, 0, 255, 0);
+
+  // -------------------------
+  // Create the driver systems
+  // -------------------------
+  //double time = my_hmmwv.GetSystem()->GetChTime();
+*/
+  // Create both a GUI driver and a path-follower and allow switching between them
+//  ChIrrGuiDriver driver_gui(app);
+  //driver_gui.Initialize();
   app.SetPaused(1);
 
   std::vector<double> x_vec=msg->x;
@@ -269,13 +317,18 @@ void controlCallback(const traj_gen::Control::ConstPtr &msg,HMMWV_Reduced &my_hm
 
 
 }
+
 // =============================================================================
 
 int main(int argc, char* argv[]) {
 //while (ros::ok())
 //{
 
-
+char cwd[1024];
+  if (getcwd(cwd, sizeof(cwd)) != NULL)
+      fprintf(stdout, "Current working dir: %s\n", cwd);
+  else
+      perror("getcwd() error");
     GetLog() << "Copyright (c) 2017 projectchrono.org\nChrono version: " << CHRONO_VERSION << "\n\n";
 
     SetChronoDataPath(CHRONO_DATA_DIR);
@@ -438,11 +491,11 @@ int main(int argc, char* argv[]) {
   //  int file_idx=0;
     //double xVec[3];
     std::ofstream myfile1;
-    myfile1.open(data_path+"position.txt",std::ofstream::out | std::ofstream::trunc);
+    myfile1.open(data_path+"paths/position.txt",std::ofstream::out | std::ofstream::trunc);
 
     while (app.GetDevice()->run()) {
         // Extract system state
-        ros::Subscriber sub = n.subscribe<traj_gen::Control>("/mavs/optimal_control", 10, boost::bind(controlCallback, _1, boost::ref(my_hmmwv),boost::ref(app),boost::ref(driver_gui)));
+        ros::Subscriber sub = n.subscribe<traj_gen::Control>("desired_ref", 10, boost::bind(controlCallback, _1, boost::ref(my_hmmwv),boost::ref(app),boost::ref(driver_gui)));
     //   ros::Subscriber sub = n.subscribe<mavs_control::Control>("/mavs/optimal_control", 10, boost::bind(&controlCallback, _1, boost::ref(my_hmmwv),boost::ref(app)));
       //  ros::Subscriber sub = n.subscribe("/mavs/optimal_control", 10, controlCallback);
         double time = my_hmmwv.GetSystem()->GetChTime();
@@ -561,7 +614,7 @@ int main(int argc, char* argv[]) {
         data_out.t_chrono=time; //time in chrono simulation
         data_out.x_pos= global_pos[0] ;
         data_out.y_pos=global_pos[1];
-        data_out.x_v= global_velCOM[0]; //speed measured at the origin of the chassis reference frame.
+        data_out.x_v= fabs(global_velCOM[0]); //speed measured at the origin of the chassis reference frame.
         data_out.y_v= global_velCOM[1];
         data_out.x_a= global_accCOM[0];
         data_out.yaw_curr=yaw_val; //in radians

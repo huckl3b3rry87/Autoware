@@ -1,0 +1,4 @@
+<launch>
+  <node name="Reference" pkg="traj_gen" type="traj_gen" />
+  <node name="Chronode" pkg="ros_chrono" type="hmmwv_model" cwd="node" />
+</launch>

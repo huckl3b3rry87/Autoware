@@ -2,11 +2,12 @@
 #include "std_msgs/String.h"
 #include <sstream>
 #include "traj_gen/Control.h"
-#include <sstream>
 
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
  */
+
+
 int main(int argc, char **argv)
 {
   /**
@@ -47,7 +48,7 @@ int main(int argc, char **argv)
    */
   ros::Publisher traj_desired_pub =  n.advertise<traj_gen::Control>("desired_ref", 1);
 
-  ros::Rate loop_rate(10);
+  ros::Rate loop_rate(5);
 
   /**
    * A count of how many messages we have sent. This is used to create
@@ -59,8 +60,14 @@ int main(int argc, char **argv)
 
 
     traj_gen::Control data_out;
-    data_out.x={200 200};
-    data_out.y={0,50};
+    std::vector<double> x(2);
+    std::vector<double> y(2);
+    x[0]=200;
+    x[1]=200;
+    y[0]=0;
+    y[1]=50;
+    data_out.x=x;
+    data_out.y=y;
     traj_desired_pub.publish(data_out);
 
     ros::spinOnce();
