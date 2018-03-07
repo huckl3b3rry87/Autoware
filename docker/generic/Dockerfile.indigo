@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # https://github.com/CPFL/Autoware/blob/master/docker/generic/Dockerfile.kinetic
 # FROM nvidia/cuda:8.0-devel-ubuntu16.04
 
@@ -138,6 +139,12 @@ CMD ["/bin/bash", "-c", "source /opt/ros/kinetic/setup.bash && source /tmp/works
 #https://github.com/osrf/car_demo/blob/master/Dockerfile
 ##############################################################
 =======
+=======
+FROM nvidia/cuda:8.0-devel-ubuntu14.04
+MAINTAINER Yuki Iida <aiueo.0409@gmail.com>
+
+RUN apt-get update && apt-get install -y \
+>>>>>>> b94c18bdb82cf29214a06941597a07b004c39dbb
         software-properties-common \
         wget curl git cmake cmake-curses-gui
 
@@ -244,4 +251,7 @@ RUN gconftool-2 --set "/apps/gnome-terminal/profiles/Default/background_color" -
 
 # Default CMD
 CMD ["/bin/bash"]
+<<<<<<< HEAD
 >>>>>>> 2a24713ad98711bfc15eaff21b5fb4af92263259:docker/generic/Dockerfile.indigo
+=======
+>>>>>>> b94c18bdb82cf29214a06941597a07b004c39dbb
