@@ -22,6 +22,6 @@ minDepth: 0.005
 kp: 1e8
 
 # LiDAR properties
-lidar_z: 1.1
+lidar_z: 1.4
 lidar_x: 1.75
 topic: lidar_points
