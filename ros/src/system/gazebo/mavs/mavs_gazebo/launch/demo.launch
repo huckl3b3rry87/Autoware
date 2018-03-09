@@ -38,10 +38,9 @@
   <node name="move_hmmwv" pkg="mavs_gazebo" type="move_hmmwv.jl" output="screen"/>
 
   <!-- publish the global position of the robot -->
-  <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_scanner_base" args="0 0 0.5 0 0 0 map base_footprint"/>
-
+  <node name="postion" pkg="mavs_gazebo" type="link_positions.jl" output="screen"/>
   <node pkg="mavs_description" type="frame_tf_broadcaster" name="frame_tf_broadcaster" />
   <!-- TODO try to remove this and use odom and gps-->
-  <!--node pkg="mavs_description" type="position_broadcaster" name="postion_broadcaster" args="$(arg name)"/-->
+  <node pkg="mavs_description" type="position_broadcaster" name="postion_broadcaster" args="$(arg name)"/>
 
 </launch>
