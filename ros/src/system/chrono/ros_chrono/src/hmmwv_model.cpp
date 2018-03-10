@@ -202,12 +202,9 @@ class ChDriverSelector : public irr::IEventReceiver {
     ChIrrGuiDriver* m_driver_gui;
     ChDriver* m_driver;
 };
-//----------------------callback
-//void controlCallback(const mavs_control::Control::ConstPtr &msg)
 
 struct parameters
 {
-//    parameters(RigidTerrain terrain1, HMMWV_Reduced my_hmmwv1) : terrain2(terrain1), my_hmmwv2(my_hmmwv1) {}
     RigidTerrain terrain;
     HMMWV_Reduced my_hmmwv;
     ChRealtimeStepTimer realtime_timer;
@@ -218,8 +215,9 @@ struct parameters
     double braking_input;
     irr::scene::IMeshSceneNode* ballS;
     irr::scene::IMeshSceneNode* ballT;
-//    parameters(){};
 } ;
+//----------------------callback
+
 void controlCallback(const traj_gen::Control::ConstPtr &msg, parameters &hmmwv_params,ChVehicleIrrApp &app,ChIrrGuiDriver &driver_gui,
 double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Publisher &vehicleinfo_pub){
 
@@ -286,6 +284,7 @@ double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Pu
   int render_frame = 0;
 
   while (app.GetDevice()->run()) {
+
     if (sim_frame == 0) {
 
         app.BeginScene(true, true, irr::video::SColor(255, 140, 161, 192));
@@ -382,112 +381,6 @@ double &target_speed,double &time,ros_chrono_msgs::veh_status &data_out, ros::Pu
     }
 }
 
-/*
-struct parameters
-{
-  public:
-    RigidTerrain terrain;
-    HMMWV_Reduced my_hmmwv;
-    ChRealtimeStepTimer realtime_timer;
-    ChVehicleIrrApp app;
-    ChIrrGuiDriver driver_gui;
-    ChPathFollowerDriver driver_follower;
-    ChDriverSelector selector;
-    double target_speed;
-    double time;
-    double throttle_input;
-    double steering_input;
-    double braking_input;
-    int sim_frame;
-    void controlCallback(const traj_gen::Control::ConstPtr &msg);
-
-//    parameters(){};
-} ;
-void parameters::controlCallback(const traj_gen::Control::ConstPtr &msg){
-
-  app.SetPaused(1);
-
-  std::vector<double> x_vec=msg->x;
-  std::vector<double> y_vec=msg->y;
-//  ROS_INFO("I heard: [%f]", x_vec[0]);
-  //ROS_INFO_STREAM(msg);
-  double num_pts = x_vec.size();
-  double num_cols = 3;
-  double z_val = 0.5;
-  std::ofstream myfile;
-  myfile.open(path_file,std::ofstream::out | std::ofstream::trunc);
-
-  myfile << ' ' << num_pts << ' '<< num_cols << '\n';
-  for (int pt_cnt=0; pt_cnt<num_pts;pt_cnt=pt_cnt+1){
-  myfile << ' ' << x_vec[pt_cnt] << ' '<< y_vec[pt_cnt] <<' ' << z_val << '\n';
-}
-  myfile.close();
-
-  auto path = ChBezierCurve::read(path_file);
-
-  // Initialize driver follower
-  //driver_follower.Reset();
-  ChPathFollowerDriver driver_follower(my_hmmwv.GetVehicle(), steering_controller_file,
-                                       speed_controller_file, path, "my_path", target_speed);
-  driver_follower.Initialize();
-
-  // Create and register a custom Irrlicht event receiver to allow selecting the
-  // current driver model.
-  ChDriverSelector selector(my_hmmwv.GetVehicle(), &driver_follower, &driver_gui);
-  app.SetUserEventReceiver(&selector);
-
-  // Finalize construction of visualization assets
-  app.AssetBindAll();
-  app.AssetUpdateAll();
-
-
-
-  // -----------------
-  // Initialize output
-  // -----------------
-
-  state_output = state_output || povray_output;
-
-  if (state_output) {
-      if (ChFileutils::MakeDirectory(out_dir.c_str()) < 0) {
-          std::cout << "Error creating directory " << out_dir << std::endl;
-          //return 1;
-      }
-  }
-
-  if (povray_output) {
-      if (ChFileutils::MakeDirectory(pov_dir.c_str()) < 0) {
-          std::cout << "Error creating directory " << pov_dir << std::endl;
-        //  return 1;
-      }
-      driver_follower.ExportPathPovray(out_dir);
-  }
-  app.SetPaused(0);
-
-  throttle_input = selector.GetDriver()->GetThrottle();
-  steering_input = selector.GetDriver()->GetSteering();
-  braking_input = selector.GetDriver()->GetBraking();
-  driver_follower.Synchronize(time);
-  driver_gui.Synchronize(time);
-  terrain.Synchronize(time);
-  my_hmmwv.Synchronize(time, steering_input, braking_input, throttle_input, terrain);
-  std::string msg1 = selector.UsingGUI() ? "GUI driver" : "Follower driver";
-  app.Synchronize(msg1, steering_input, throttle_input, braking_input);
-
-        // Advance simulation for one timestep for all modules
-  double step = realtime_timer.SuggestSimulationStep(step_size);
-  driver_follower.Advance(step);
-  driver_gui.Advance(step);
-  terrain.Advance(step);
-  my_hmmwv.Advance(step);
-  app.Advance(step);
-
-  // Increment simulation frame number
-  sim_frame++;
-
-
-
-}*/
 // =============================================================================
 int main(int argc, char* argv[]) {
 
@@ -512,11 +405,13 @@ char cwd[1024];
 
     //Initial Position
     double x0, y0, z0, psi;
+    bool gui_switch;
     n.getParam("x",x0);
     n.getParam("y",y0);
     n.getParam("z",z0);
     n.getParam("x",x0);
     n.getParam("x",x0);
+    n.getParam("gui_status",gui_switch);
 
     // Initial vehicle location and orientation
     ChVector<> initLoc(x0, y0, z0);
@@ -561,14 +456,8 @@ char cwd[1024];
     // Create the Bezier path
     // ----------------------
 
-  //    parameters hmmwv_params{};
-//  struct parameters hmmwv_params;
-  //  my_hmmwv=my_hmmwv;
     auto path = ChBezierCurve::read(path_file);
-//  auto path = ChBezierCurve::read(chrono::vehicle::GetDataFile(path_file));
-//z= 0.1;
-//std::cout << path;
-//    lol->write(data_path+"paths/my_path.txt");
+
 
     // ---------------------------------------
     // Create the vehicle Irrlicht application
@@ -674,25 +563,11 @@ char cwd[1024];
     double throttle_input, steering_input, braking_input;
     parameters hmmwv_params{terrain,my_hmmwv,realtime_timer,sim_frame,callback_act,steering_input,throttle_input,braking_input,ballS,ballT};
 
-    //my_hmmwv_ptr = &my_hmmwv;
-    //app_ptr = &app;
-  //  int file_idx=0;
-    //double xVec[3];
     std::ofstream myfile1;
     myfile1.open(data_path+"paths/position.txt",std::ofstream::out | std::ofstream::trunc);
   //  bool new_path=0;
     while (app.GetDevice()->run()) {
       double time = my_hmmwv.GetSystem()->GetChTime();
-
-        // Extract system state
-    //   ros::Subscriber sub = n.subscribe<mavs_control::Control>("/mavs/optimal_control", 10, boost::bind(&controlCallback, _1, boost::ref(my_hmmwv),boost::ref(app)));
-      //  ros::Subscriber sub = n.subscribe("/mavs/optimal_control", 10, controlCallback);
-
-    /*    // Collect output data from modules (for inter-module communication)
-        double throttle_input = selector.GetDriver()->GetThrottle();
-        double steering_input = selector.GetDriver()->GetSteering();
-        double braking_input = selector.GetDriver()->GetBraking(); */
-
 
         /*
         // Hack for acceleration-braking maneuver
@@ -708,19 +583,16 @@ char cwd[1024];
         }
         */
 
-
-
-      //  parameters hmmwv_params{terrain,my_hmmwv,realtime_timer,app,driver_gui,driver_follower,selector,target_speed,time,throttle_input,steering_input,braking_input,sim_frame};
-      //    parameters hmmwv_params;
       //     ros::Subscriber sub = n.subscribe<traj_gen::Control>("desired_ref", 1, &parameters::controlCallback, &hmmwv_params);
-        // Render scene and output POV-Ray data
-        if (sim_frame % render_steps == 0) {
 
-            app.BeginScene(true, true, irr::video::SColor(255, 140, 161, 192));
-            app.DrawAll();
-            app.EndScene();
-          /*
-            if (povray_output) {
+        // Render scene and output POV-Ray data
+          if (sim_frame==-1){   //if (sim_frame % render_steps == 0) {
+
+          app.BeginScene(true, true, irr::video::SColor(255, 140, 161, 192));
+          app.DrawAll();
+          app.EndScene();
+
+        /*    if (povray_output) {
                 char filename[100];
                 sprintf(filename, "%s/data_%03d.dat", pov_dir.c_str(), render_frame + 1);
                 utils::WriteShapesPovray(my_hmmwv.GetSystem(), filename);
@@ -734,7 +606,7 @@ char cwd[1024];
                 csv << std::endl;
             }*/
 
-            render_frame++;
+          render_frame++;
         }
 /*
         // Debug logging
@@ -769,25 +641,7 @@ char cwd[1024];
         if (time >= t_end)
             break;
 
-        // Initialize driver follower
-        //driver_follower.Reset();
-    /*    ChPathFollowerDriver driver_follower(my_hmmwv.GetVehicle(), steering_controller_file,
-                                             speed_controller_file, path, "my_path", target_speed);
-        driver_follower.Initialize();
 
-        // Create and register a custom Irrlicht event receiver to allow selecting the
-        // current driver model.
-        ChDriverSelector selector(my_hmmwv.GetVehicle(), &driver_follower, &driver_gui);
-        app.SetUserEventReceiver(&selector);
-
-        // Finalize construction of visualization assets
-        app.AssetBindAll();
-        app.AssetUpdateAll();
-*/
-
-
-  //      app.SetPaused(0);
-        //while (app.GetDevice()->run()) {
         // Update sentinel and target location markers for the path-follower controller.
         // Note that we do this whether or not we are currently using the path-follower driver.
 
