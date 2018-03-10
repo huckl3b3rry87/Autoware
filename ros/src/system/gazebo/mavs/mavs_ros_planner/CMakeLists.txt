@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(mavs_gazebo)
+project(mavs_ros_planner)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
   tf
-  global_planner
-  base_local_planner
+  move_base
 )
 
 catkin_package(
@@ -14,6 +13,5 @@ catkin_package(
   roscpp
   sensor_msgs
   tf
-  global_planner
-  base_local_planner
+  move_base
 )

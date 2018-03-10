@@ -23,8 +23,7 @@
   <depend>tf</depend>
   <depend>gazebo_ros</depend>
 
-  <depend>global_planner</depend>
-  <depend>base_local_planner</depend>
+  <depend>move_base</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
