@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>traj_gen</name>
+  <name>traj_gen_chrono</name>
   <version>0.0.0</version>
-  <description>The traj_gen package</description>
+  <description>The traj_gen_chrono package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

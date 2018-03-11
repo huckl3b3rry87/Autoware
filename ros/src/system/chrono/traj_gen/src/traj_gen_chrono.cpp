@@ -1,12 +1,14 @@
 #include "ros/ros.h"
+#include <ros/console.h>
 #include "std_msgs/String.h"
 #include <sstream>
-#include "traj_gen/Control.h"
-#include <sstream>
+#include "traj_gen_chrono/Control.h"
 
 /**
  * This tutorial demonstrates simple sending of messages over the ROS system.
  */
+
+
 int main(int argc, char **argv)
 {
   /**
@@ -26,8 +28,17 @@ int main(int argc, char **argv)
    * The first NodeHandle constructed will fully initialize this node, and the last
    * NodeHandle destructed will close down the node.
    */
-  ros::NodeHandle n;
-
+  ros::NodeHandle a;
+  std::vector<double> x1;
+  std::vector<double> y1;
+//  XmlRpc::XmlRpcValue x1,y1;
+  a.getParam("/x_traj",x1);
+  a.getParam("/y_traj",y1);
+/*  for (int32_t i = 0; i < x1.size(); ++i)
+  {
+    ROS_ASSERT(x1[i].getType() == XmlRpc::XmlRpcValue::TypeDouble);
+    ROS_ASSERT(y1[i].getType() == XmlRpc::XmlRpcValue::TypeDouble);
+  } */
   /**
    * The advertise() function is how you tell ROS that you want to
    * publish on a given topic name. This invokes a call to the ROS
@@ -45,9 +56,9 @@ int main(int argc, char **argv)
    * than we can send them, the number here specifies how many messages to
    * buffer up before throwing some away.
    */
-  ros::Publisher traj_desired_pub =  n.advertise<traj_gen::Control>("desired_ref", 1);
+  ros::Publisher traj_desired_pub =  a.advertise<traj_gen_chrono::Control>("desired_ref", 1);
 
-  ros::Rate loop_rate(10);
+  ros::Rate loop_rate(1);
 
   /**
    * A count of how many messages we have sent. This is used to create
@@ -58,9 +69,17 @@ int main(int argc, char **argv)
   {
 
 
-    traj_gen::Control data_out;
-    data_out.x={200 200};
-    data_out.y={0,50};
+    traj_gen_chrono::Control data_out;
+/*
+    std::vector<double> x(2);
+    std::vector<double> y(2);
+    x[0]=200;
+    x[1]=200;
+    y[0]=0;
+    y[1]=50;
+    */
+    data_out.x=x1;
+    data_out.y=y1;
     traj_desired_pub.publish(data_out);
 
     ros::spinOnce();

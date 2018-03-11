@@ -16,7 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   ros_chrono_msgs
-  traj_gen
+  traj_gen_chrono
 )
 
 find_package(
