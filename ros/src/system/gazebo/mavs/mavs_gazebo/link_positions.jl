@@ -17,7 +17,7 @@ using gazebo_msgs.msg
 function loop(get_link_state, pub)
     loop_rate = Rate(100.0)
     while ! is_shutdown()
-        linkName = "base_footprint"  # TODO make this a parameter
+        linkName = "hmmwv::base_footprint"  # TODO make this a parameter 
 
         # Get the current position of the Gazebo model
         gs = GetLinkStateRequest()
