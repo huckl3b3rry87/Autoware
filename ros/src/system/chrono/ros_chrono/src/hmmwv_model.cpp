@@ -970,7 +970,7 @@ int main(int argc, char* argv[]) {
     // ---------------------------------------
     // Create the vehicle Irrlicht application
     // ---------------------------------------
-   
+
     ChVehicleIrrApp app(&my_hmmwv.GetVehicle(), &my_hmmwv.GetPowertrain(), L"Steering Controller Demo",
                         irr::core::dimension2d<irr::u32>(800, 640));
 
@@ -1045,6 +1045,7 @@ int main(int argc, char* argv[]) {
       myfile << ' ' << hmmwv_params.x_traj_curr[pt_cnt] << ' '<< hmmwv_params.y_traj_curr[pt_cnt] <<' ' << z_val << '\n';
     }
     myfile.close();
+
     // ----------------------
     // Create the Bezier path
     // ----------------------
