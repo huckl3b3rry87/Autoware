@@ -34,8 +34,8 @@ int main(int argc, char **argv)
   std::vector<double> x2(2,200);
   std::vector<double> y2(2,50);
 //  XmlRpc::XmlRpcValue x1,y1;
-  a.getParam("hmmwv_chrono/x_traj",x1);
-  a.getParam("hmmwv_chrono/y_traj",y1);
+  a.getParam("hmmwv_chrono/traj/x_traj",x1);
+  a.getParam("hmmwv_chrono/traj/y_traj",y1);
 
 
   int count = 0;

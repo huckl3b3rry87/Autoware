@@ -36,7 +36,7 @@ $ sudo gedit ros/src/system/chrono/ros_chrono/config/hmmwv_params.yaml
 
 ## Change Values of Updated Path
 
-Change the values of x2, y2 in traj_gen.cpp and recompile using catkin_make.
+Change the values of x2, y2 in traj_gen_chrono.cpp and recompile using catkin_make.
 
 ## Monitor Vehicle State
 
@@ -68,3 +68,39 @@ $ rosparam set <param_name> "param_value"
 - Izz: 4,110.1
 - la: 1.5775
 - lb: 1.7245  
+
+## Parameter list
+- /hmmwv_chrono/gui_status (Switch to turn gui on or off)
+- /hmmwv_chrono/initial_conditions/ax (Initial x acceleration)
+- /hmmwv_chrono/initial_conditions/pitch (Initial pitch)
+-/hmmwv_chrono/initial_conditions/r (Initial r)
+- /hmmwv_chrono/initial_conditions/roll (Initial roll)
+- /hmmwv_chrono/initial_conditions/sa (Initial steering angle)
+- /hmmwv_chrono/initial_conditions/ux (Initial x speed)
+- /hmmwv_chrono/initial_conditions/v (Initial velocity)
+- /hmmwv_chrono/initial_conditions/v_des (Desired velocity)
+- /hmmwv_chrono/initial_conditions/x (Initial x)
+- /hmmwv_chrono/initial_conditions/y (Initial y)
+- /hmmwv_chrono/initial_conditions/yaw (Initial yaw)
+- /hmmwv_chrono/initial_conditions/z (Initial z)
+- /hmmwv_chrono/traj/x_traj (Desired x path)
+- /hmmwv_chrono/traj/y_traj (Desired y path)
+- /hmmwv_chrono/vehicle_parameters/Izz (Moment of Inertia about z axis)
+- /hmmwv_chrono/vehicle_parameters/la (Distance from COM to front axle)
+- /hmmwv_chrono/vehicle_parameters/lb (Distance from COM to rear axle)
+- /hmmwv_chrono/vehicle_parameters/mass (Vehicle mass)
+- /hmmwv_chrono/vehicleinfo/brk_in (Brake input)
+- /hmmwv_chrono/vehicleinfo/sa (Steering angle)
+- /hmmwv_chrono/vehicleinfo/str_in (Steering input)
+- /hmmwv_chrono/vehicleinfo/t_chrono (Time in chrono model)
+- /hmmwv_chrono/vehicleinfo/thrt_in (Throttle input)
+- /hmmwv_chrono/vehicleinfo/x_a (X acceleration)
+- /hmmwv_chrono/vehicleinfo/x_pos (X position)
+- /hmmwv_chrono/vehicleinfo/x_v (X speed)
+- /hmmwv_chrono/vehicleinfo/y_pos (Y position)
+- /hmmwv_chrono/vehicleinfo/y_v (Y speed)
+- /hmmwv_chrono/vehicleinfo/yaw_curr (Yaw)
+- /hmmwv_chrono/vehicleinfo/yaw_rate (Yaw rate)
+
+## Topic list
+- /vehicleinfo (Vehicle states, inputs, and time)
